@@ -61,18 +61,18 @@ public final class Main_form extends javax.swing.JFrame {
      * Creates new form Main_form
      */
     Goods_price SauVan = new Goods_price();
-    public Bill_Printer in_hoa_don = new Bill_Printer();
+    private Bill_Printer in_hoa_don = new Bill_Printer();
 
-    public List<customer> Customers;
-    public Vector<String> Paid_MaSP;
-    public Vector<String> Paid_TenSP;
-    public Vector<Double> Paid_GiaSSP;
-    public Vector<Double> Paid_GiaLSP;
-    public Vector<Double> Paid_SoLuongSP;
-    public Vector<Double> Paid_TongGiaSP;
+    private List<customer> Customers;
+    private Vector<String> Paid_MaSP;
+    private Vector<String> Paid_TenSP;
+    private Vector<Double> Paid_GiaSSP;
+    private Vector<Double> Paid_GiaLSP;
+    private Vector<Double> Paid_SoLuongSP;
+    private Vector<Double> Paid_TongGiaSP;
 
-    public Vector<String> search_list;
-    public int hand_offset = 1;
+    private Vector<String> search_list;
+    private int hand_offset = 1;
     private static DecimalFormat moneyFormat;
     private static DecimalFormat slFormat0, slFormat1, slFormat2;
     private double Money_count_Items = 0;
@@ -125,7 +125,7 @@ public final class Main_form extends javax.swing.JFrame {
         refresh();
     }
 
-    public void variables_allocation() {
+    private void variables_allocation() {
 
         this.Customers = new ArrayList<>();
         this.Paid_MaSP = new Vector<>();
@@ -140,7 +140,7 @@ public final class Main_form extends javax.swing.JFrame {
         history_tracking = new History_info();
     }
 
-    public static void check_program() {
+    private static void check_program() {
         try {
             f = new File("RingOnRequest.lock");
             // Check if the lock exist
@@ -163,9 +163,9 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    public static void get_bill_configure() {
+    private static void get_bill_configure() {
         try {
-            try ( FileInputStream in = new FileInputStream(parameter.config_path);BufferedReader bufffile = new BufferedReader(new InputStreamReader(in, "UTF8"))) {
+            try ( FileInputStream in = new FileInputStream(parameter.config_path);  BufferedReader bufffile = new BufferedReader(new InputStreamReader(in, "UTF8"))) {
                 String strLine;
                 strLine = bufffile.readLine();
                 while (strLine != null) {
@@ -186,7 +186,7 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    public static void unlockFile() {
+    private static void unlockFile() {
         // release and delete file lock
         try {
             if (lock != null) {
@@ -198,7 +198,7 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    public final void my_initialization() {
+    private final void my_initialization() {
         button_update_database_item.setEnabled(false);
         dm_hoa_don = (DefaultTableModel) table_transaction_items.getModel();
         dm_info_SP = (DefaultTableModel) table_database_items.getModel();
@@ -225,27 +225,25 @@ public final class Main_form extends javax.swing.JFrame {
 
     /*
      * GUI functions and initialation
-    */
-    
-    private String get_textbox_text(JTextField tb)
-    {
+     */
+    private String get_textbox_text(JTextField tb) {
         return tb.getText().trim();
     }
-    private boolean is_textbox_empty(JTextField tb)
-    {
+
+    private boolean is_textbox_empty(JTextField tb) {
         return tb.getText().isEmpty();
     }
-    private void textbox_clear(JTextField tb)
-    {
+
+    private void textbox_clear(JTextField tb) {
         tb.setText("");
     }
-    
+
     private void select_price() {
         cal_price_items();
         gohome();
     }
 
-    public void setframeicon() {
+    private void setframeicon() {
         try {
             InputStream imgStream = this.getClass().getResourceAsStream(parameter.barcode_icon);
             BufferedImage bi = ImageIO.read(imgStream);
@@ -256,13 +254,13 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    public void get_date() {
+    private void get_date() {
         DateFormat dateFormat = new SimpleDateFormat(parameter.dateformat);
         Date date = new Date();
         sDate_time = dateFormat.format(date);
     }
 
-    public void display_date() {
+    private void display_date() {
         DateFormat dateFormat = new SimpleDateFormat(parameter.dateformat);
         Date date = new Date();
         sDate_time = dateFormat.format(date);
@@ -290,7 +288,7 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    public final void backup_file(String src_file, String dest_file) {
+    private final void backup_file(String src_file, String dest_file) {
         try {
 
             String line = parameter.COPY_CMD + src_file + " " + dest_file;
@@ -302,7 +300,7 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    public final void update_bang_hoadon() {
+    private final void update_bang_hoadon() {
         int row_count = table_transaction_items.getRowCount();
         Object temp;
         //int i = bang_HoaDon.getSelectedRow();
@@ -325,7 +323,7 @@ public final class Main_form extends javax.swing.JFrame {
         update_total_Paid_row();
     }
 
-    public final void setPayTableColumnSize() {
+    private final void setPayTableColumnSize() {
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
         table_transaction_items.getTableHeader().setFont(new Font("Times New Roman", Font.BOLD, 16));
@@ -354,7 +352,7 @@ public final class Main_form extends javax.swing.JFrame {
         //bang_HoaDon.moveColumn(4, 5);
     }
 
-    public final void setInfoTableColumnSize() {
+    private final void setInfoTableColumnSize() {
         table_database_items.getTableHeader().setFont(new Font("Times New Roman", Font.BOLD, 14));
         TableColumn column;
         column = table_database_items.getColumnModel().getColumn(0);
@@ -371,7 +369,7 @@ public final class Main_form extends javax.swing.JFrame {
         column.setPreferredWidth(5);
     }
 
-    public int search_onpaylist(String maSP) {
+    private int search_onpaylist(String maSP) {
         int zise_list = Paid_MaSP.size();
         for (int i = 0; i < zise_list; i++) {
             if (Paid_MaSP.get(i).equals(maSP)) {
@@ -381,7 +379,7 @@ public final class Main_form extends javax.swing.JFrame {
         return -1;
     }
 
-    public void add_items_table(String goodsID) {
+    private void add_items_table(String goodsID) {
         int idx = SauVan.tim_sp(goodsID);
         show_status("Mã Sản phẩm :" + goodsID, Color.RED);
         if (idx == -1) //not found in data
@@ -404,7 +402,7 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    public final void addtopay(int idx) {
+    private final void addtopay(int idx) {
         Vector CurSP = new Vector();
         CurSP = SauVan.get_sp(idx);
         result = search_onpaylist(CurSP.elementAt(0).toString());
@@ -426,7 +424,7 @@ public final class Main_form extends javax.swing.JFrame {
 
             //add row into table
             add_item_row();
-            add_item_payment_rows();
+            add_payment_rows();
         } else //already in pay list
         {
             show_status("[đã có trong giỏ hàng] sản phẩm : " + CurSP.get(1).toString(), Color.BLUE);
@@ -453,7 +451,7 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    public void calculate_item_paid_row(int i) {
+    private void calculate_item_paid_row(int i) {
         double temp_tong;
         if (i >= 0) {
             giaS_mode = select_price.isSelected();
@@ -479,28 +477,41 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    public void update_item_row(int i) {
+    private void update_item_row(int i) {
         table_transaction_items.getModel().setValueAt(Paid_GiaSSP.get(i), i, 3);
         table_transaction_items.getModel().setValueAt(Paid_GiaLSP.get(i), i, 4);
         table_transaction_items.getModel().setValueAt(Paid_SoLuongSP.get(i), i, 5);
         table_transaction_items.getModel().setValueAt(Paid_TongGiaSP.get(i), i, 6);
     }
 
-    public void clear_table(DefaultTableModel tableModel) {
+    private void clear_table(DefaultTableModel tableModel) {
         tableModel.getDataVector().removeAllElements();
         tableModel.fireTableDataChanged(); // notifies the JTable that the model has changed
     }
 
-    public void add_item_row() {
+    private void update_payment_rows() {
+        remove_payment_rows();
+        add_payment_rows();
+    }
+
+    private void remove_payment_rows() {
+        remove_last_row();
+        if (loan_already_on_table) {
+            remove_last_row();
+            remove_last_row();
+        }
+    }
+
+    private void remove_last_row() {
         int rowcount = table_transaction_items.getRowCount();
         if (rowcount != 0) {
-            System.out.println("delete last row");
             dm_hoa_don.removeRow(rowcount - 1);
-            if(loan_already_on_table)
-            {
-                remove_total_and_loan_row();
-            }
         }
+    }
+
+    private void add_item_row() {
+        remove_payment_rows();
+
         int last_row = Paid_MaSP.size() - 1;
 
         Vector data_row = new Vector();
@@ -515,33 +526,37 @@ public final class Main_form extends javax.swing.JFrame {
         dm_hoa_don.addRow(data_row);
     }
 
-    private void get_loan_from_textbox(JTextField tb)
-    {
+    private void get_loan_from_textbox(JTextField tb) {
         get_loan_from_string(tb.getText());
     }
-    private void get_loan_from_string(String str_loan)
-    {
+
+    private void get_loan_from_string(String str_loan) {
         if (!str_loan.trim().isEmpty()) {
             try {
                 loan_amount = Double.parseDouble(str_loan);
-                
+
             } catch (NumberFormatException a) {
                 show_status("Nhập sai!", Color.RED);
             }
-        }
-        else
-        {
+        } else {
             loan_amount = 0.0;
         }
         has_loan = loan_amount > 0;
     }
-    
-    public void add_item_payment_rows()
-    {
-        add_item_sub_total_row();
-        add_item_total_and_loan_row();
+
+    private void loan_clear() {
+        loan_amount = 0;
+        has_loan = false;
+        loan_already_on_table = false;
     }
-    public void add_item_sub_total_row() {
+
+    private void add_payment_rows() {
+
+        add_sub_total_row();
+        add_total_and_loan_row();
+    }
+
+    private void add_sub_total_row() {
 
         Vector Paid = new Vector();
         calculate_total_price();
@@ -555,8 +570,7 @@ public final class Main_form extends javax.swing.JFrame {
         dm_hoa_don.addRow(Paid);
     }
 
-    private void add_item_total_row()
-    {
+    private void add_item_total_row() {
         Vector sVector = new Vector();
         sVector.add(null);
         sVector.add(null);
@@ -568,34 +582,35 @@ public final class Main_form extends javax.swing.JFrame {
         sVector.add(Boolean.FALSE);
         dm_hoa_don.addRow(sVector);
     }
-    public void add_item_total_and_loan_row() {
-        if(has_loan)
-        {
-            add_item_loan_row();
-            add_item_total_row();            
+
+    private void add_total_and_loan_row() {
+        if (has_loan) {
+            loan_already_on_table = true;
+            add_loan_row();
+            add_item_total_row();
         }
 
     }
-    public void remove_total_and_loan_row() {
-        int rowcount = table_transaction_items.getRowCount();
-        if (rowcount != 0) {
-            dm_hoa_don.removeRow(rowcount - 1);
-            dm_hoa_don.removeRow(rowcount - 2);
-        }
+
+    private void add_loan_row() {
+        add_vector_row(null, null, null, null, null, "Nợ cũ", loan_amount, Boolean.FALSE);
     }
-    public void add_item_loan_row() {
-            Vector sVector = new Vector();
-            sVector.add(null);
-            sVector.add(null);
-            sVector.add(null);
-            sVector.add(null);
-            sVector.add(null);
-            sVector.add("Nợ cũ");  //so luong
-            sVector.add(loan_amount);  // tien
-            sVector.add(Boolean.FALSE);
-            dm_hoa_don.addRow(sVector);  
+
+    private void add_vector_row(Object c0, Object c1, Object c2, Object c3,
+            Object c4, Object c5, Object c6, Boolean c7) {
+        Vector sVector = new Vector();
+        sVector.add(c0);
+        sVector.add(c1);
+        sVector.add(c2);
+        sVector.add(c3);
+        sVector.add(c4);
+        sVector.add(c5);  //so luong
+        sVector.add(c6);  // tien
+        sVector.add(c7);
+        dm_hoa_don.addRow(sVector);
     }
-    public void calculate_total_price() {
+
+    private void calculate_total_price() {
         int sizerow = Paid_MaSP.size();
         Money_count_Items = 0;
         Money_total_bill = 0.0;
@@ -609,23 +624,20 @@ public final class Main_form extends javax.swing.JFrame {
 
     private void add_table_row(List<Object> items, DefaultTableModel dtm) {
         Vector sVector = new Vector();
-        for (Object item:items)
-        {
+        for (Object item : items) {
             sVector.add(item);
         }
         dtm.addRow(sVector);
     }
 
-
-
-    public void update_total_Paid_row() {
+    private void update_total_Paid_row() {
         int sizerow = Paid_MaSP.size();
         calculate_total_price();
         table_transaction_items.getModel().setValueAt(Money_count_Items, sizerow, 5);
         table_transaction_items.getModel().setValueAt(Money_total_bill, sizerow, 6);
     }
 
-    public void add_info_SP2BTK(String iMaSP) {
+    private void add_info_SP2BTK(String iMaSP) {
         int new_MaSP_size = New_MaSP.size();
         int i;
         int isoluong_update;
@@ -658,7 +670,7 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    public void update_info_SP2BTK(String updateMaSP) {
+    private void update_info_SP2BTK(String updateMaSP) {
         int j;
         int i = 0;
         int update_MaSP_size = New_MaSP.size();
@@ -682,7 +694,7 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    public void handle_Consumer_name() {
+    private void handle_Consumer_name() {
         if (Consumer_name.equals("")) {
             Consumer_name = "Ẩn danh";
         } else if (Consumer_name.substring(0, 3).contains("chi")) {
@@ -695,7 +707,7 @@ public final class Main_form extends javax.swing.JFrame {
         textbox_consumer_name.setText("");
     }
 
-    public void cal_price_items() {
+    private void cal_price_items() {
         int paid_count = Paid_MaSP.size();
         double temp_price;
         giaS_mode = select_price.isSelected();
@@ -719,11 +731,12 @@ public final class Main_form extends javax.swing.JFrame {
                 }
                 table_transaction_items.setValueAt(Paid_TongGiaSP.get(i), i, 6);
             }
-            update_total_Paid_row();
+            update_payment_rows();
+            //update_total_Paid_row();
         }
     }
 
-    public int review_bill() {
+    private int review_bill() {
         String sNotification = "";
         String sPadding = "...............................................";
         String ten_sp;
@@ -756,7 +769,7 @@ public final class Main_form extends javax.swing.JFrame {
         return n;
     }
 
-    public int confirm_customer(String inmessage) {
+    private int confirm_customer(String inmessage) {
         int n = JOptionPane.showOptionDialog(null,
                 inmessage,
                 message.CONFIRM_UPDATE,
@@ -767,7 +780,7 @@ public final class Main_form extends javax.swing.JFrame {
         return n;
     }
 
-    public void update_customer(String customerID, String customerName) {
+    private void update_customer(String customerID, String customerName) {
         // create then add new customer
         int max_name_length;
         customer newCustomer = new customer(customerID, customerName, 0);
@@ -810,7 +823,7 @@ public final class Main_form extends javax.swing.JFrame {
                 + "\nMã: " + customerID);
     }
 
-    public void pre_paid() {
+    private void pre_paid() {
         int i, count = 1;
         get_date();
         if (!Paid_MaSP.isEmpty() && Money_count_Items != 0) {
@@ -849,7 +862,7 @@ public final class Main_form extends javax.swing.JFrame {
                 display_text_paylist();
                 dm_hoa_don.fireTableDataChanged();
             }
-            add_item_sub_total_row();
+            add_sub_total_row();
         } else {
             show_status(message.BILL_IS_EMPTY, Color.BLUE);
         }
@@ -857,7 +870,7 @@ public final class Main_form extends javax.swing.JFrame {
         gohome();
     }
 
-    public int paid_function() {
+    private int paid_function() {
         int return_val;
         Consumer_name = get_textbox_text(textbox_consumer_name);
         if (Consumer_name.equals("")) {
@@ -887,7 +900,7 @@ public final class Main_form extends javax.swing.JFrame {
         return return_val;
     }
 
-    public int write2datafile() {
+    private int write2datafile() {
         int return_val = 0;
         int paid_count = Paid_MaSP.size();
         String file_date = sDate_time;
@@ -931,13 +944,13 @@ public final class Main_form extends javax.swing.JFrame {
         return return_val;
     }
 
-    public void normal_mode(Boolean ibool) {
+    private void normal_mode(Boolean ibool) {
 
         button_pay_print_bill.setVisible(ibool);
         botton_update_items.setEnabled(!ibool);
     }
 
-    public int show_message(String imessage) {
+    private int show_message(String imessage) {
         int n = JOptionPane.showOptionDialog(null,
                 imessage,
                 parameter.TITLE,
@@ -956,7 +969,7 @@ public final class Main_form extends javax.swing.JFrame {
                 null, new String[]{"OK"}, "default");
     }
 
-    public void Print_bill_process() {
+    private void Print_bill_process() {
         try {
             File Fdir = new File("Printer");
             boolean a = Fdir.mkdirs();
@@ -983,11 +996,11 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    public String Print_header2s() {
+    private String Print_header2s() {
         String sData_row;
         boolean savespace = false;
         Consumer_name = get_textbox_text(textbox_consumer_name);
-                //ten_khach_hang.getText().trim();
+        //ten_khach_hang.getText().trim();
         if (Consumer_name.isEmpty()) {
             Consumer_name = ".........................";
         }
@@ -1012,11 +1025,11 @@ public final class Main_form extends javax.swing.JFrame {
         return sData_row;
     }
 
-    public void Print_barcode() {
+    private void Print_barcode() {
         in_hoa_don.print_handle(1);  //1 mean print barcode
     }
 
-    public int get_info_barcode() {
+    private int get_info_barcode() {
         int return_val = -1;
 
         int iprint_size = table_transaction_items.getRowCount();
@@ -1057,7 +1070,7 @@ public final class Main_form extends javax.swing.JFrame {
         return return_val;
     }
 
-    public String Print_contents2s() {
+    private String Print_contents2s() {
         String sData_row;
         int idata_size;
         sData_row = "Stt Tên sản phẩm             sl  Tiền(1000đ)\n";
@@ -1070,14 +1083,14 @@ public final class Main_form extends javax.swing.JFrame {
         return sData_row;
     }
 
-    public String Print_money2s() {
+    private String Print_money2s() {
         String sPrice = moneyFormat.format(Money_total_bill);
         String sSumitem = formatNumber(Money_count_Items, diffFloatPoint);
         String sMoney = "==>" + sSumitem + "<<>>" + sPrice + "\n";
         return sMoney;
     }
 
-    public String print_get_content(int i) {
+    private String print_get_content(int i) {
         String print_row;
         String ten_sanpham = Paid_TenSP.get(i).trim();
         String soluong = formatNumber(Paid_SoLuongSP.get(i), diffFloatPoint);
@@ -1101,7 +1114,7 @@ public final class Main_form extends javax.swing.JFrame {
         return print_row;
     }
 
-    public void print_receipt(boolean quickprint) {
+    private void print_receipt(boolean quickprint) {
         if (table_transaction_items.getRowCount() != 0) {
             int return_val;
             pre_paid();
@@ -1130,7 +1143,7 @@ public final class Main_form extends javax.swing.JFrame {
         gohome();
     }
 
-    public void in_ma_vach() {
+    private void in_ma_vach() {
         int return_val = get_info_barcode();
         if (return_val == 0) {
             return_val = show_message("Xác nhận in barcode cho sản phẩm\n");
@@ -1141,10 +1154,10 @@ public final class Main_form extends javax.swing.JFrame {
         combobox_history_transaction.setEnabled(true);
     }
 
-    public void update_customers() {
+    private void update_customers() {
         int cont;
         pre_paid();
-        
+
         if (!is_textbox_empty(textbox_new_consumer_ID)) {
             lable_makhachhang.setForeground(Color.blue);
             String customerID = parameter.CUSTOMERS + " " + get_textbox_text(textbox_new_consumer_ID);
@@ -1176,7 +1189,7 @@ public final class Main_form extends javax.swing.JFrame {
 
     }
 
-    public void update_paid_table() {
+    private void update_paid_table() {
         Updated_mode = true;
         button_update_database_item.setEnabled(true);
 
@@ -1187,7 +1200,7 @@ public final class Main_form extends javax.swing.JFrame {
         gohome();
     }
 
-    public double calprice(String foo) {
+    private double calprice(String foo) {
         double temp_result = -99999.0;
         ScriptEngineManager mgr = new ScriptEngineManager();
         ScriptEngine engine = mgr.getEngineByName("JavaScript");
@@ -1202,7 +1215,7 @@ public final class Main_form extends javax.swing.JFrame {
         return temp_result;
     }
 
-    public String formatNumber(Double inNum, int mode) {
+    private String formatNumber(Double inNum, int mode) {
         String return_string;
         switch (mode) {
             case 0:
@@ -1218,7 +1231,7 @@ public final class Main_form extends javax.swing.JFrame {
         return return_string;
     }
 
-    public void consilidated_table() {
+    private void consilidated_table() {
         int row_count = table_database_items.getRowCount();
         Object temp;
         double temp_result;
@@ -1238,11 +1251,11 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    public void xem_lai_hoa_don() {
+    private void xem_lai_hoa_don() {
         history_tracking.setVisible(true);
     }
 
-    public void refresh() {
+    private void refresh() {
         clear_Paid_list();
         clear_Updated_list();
         clear_hand_list();
@@ -1256,6 +1269,7 @@ public final class Main_form extends javax.swing.JFrame {
         textbox_consumer_name.setText("");
         textbox_loan.setText("");
         combobox_history_transaction.setEnabled(true);
+        loan_clear();
         gohome();
     }
 
@@ -1271,7 +1285,7 @@ public final class Main_form extends javax.swing.JFrame {
     private boolean savebill(String saveFile) {
         boolean return_val = true;
         String unknownComsumer = "......................";
-        
+
         if (is_textbox_empty(textbox_loan)) {
             textbox_loan.setText("0.0");
         }
@@ -1287,9 +1301,9 @@ public final class Main_form extends javax.swing.JFrame {
                 Writer out = new OutputStreamWriter(fos, "UTF8");
                 {
                     int paid_count = Paid_MaSP.size();
-                    
+
                     if (is_textbox_empty(textbox_consumer_name)) {
-                    //if (textbox_consumer_name.getText().trim().isEmpty()) {
+                        //if (textbox_consumer_name.getText().trim().isEmpty()) {
                         textbox_consumer_name.setText(unknownComsumer);
                     }
                     out.write(parameter.MARKER_CONSUMER + get_textbox_text(textbox_consumer_name) + "\n");
@@ -1327,7 +1341,7 @@ public final class Main_form extends javax.swing.JFrame {
             int curSaveBillIdx = saveBillCount % saveBillBound;
             String savefile = parameter.saveBill_path + curSaveBillIdx;
             pass_result = savebill(savefile);
-            
+
             if (pass_result) {
                 buttonSaveBillsetText(saveBillIdxNoti++);
                 saveBillCount++;
@@ -1395,7 +1409,7 @@ public final class Main_form extends javax.swing.JFrame {
                             strLine = bufffile.readLine();
                         }
                         if (dm_hoa_don.getRowCount() > 0) {
-                            add_item_sub_total_row();
+                            add_sub_total_row();
                         } else {
                             clear_Paid_list();
                             clear_table(dm_hoa_don);
@@ -1421,7 +1435,7 @@ public final class Main_form extends javax.swing.JFrame {
             textbox_consumer_name.setText(name[1]);
 
             try {
-                try ( FileInputStream in = new FileInputStream(file_path);BufferedReader bufffile = new BufferedReader(new InputStreamReader(in, "UTF8"))) {
+                try ( FileInputStream in = new FileInputStream(file_path);  BufferedReader bufffile = new BufferedReader(new InputStreamReader(in, "UTF8"))) {
                     String strLine;
                     strLine = bufffile.readLine();
                     OUTER:
@@ -1474,9 +1488,9 @@ public final class Main_form extends javax.swing.JFrame {
                                 {
                                     String sdata[] = strLine.substring(3).split("<>");
                                     loan_amount = Double.parseDouble(sdata[0]);
-                                    has_loan = loan_amount >0;
+                                    has_loan = loan_amount > 0;
                                     textbox_loan.setText(strLine.substring(3));
-                                    add_item_total_and_loan_row();
+                                    add_total_and_loan_row();
                                     break OUTER;
                                 }
                             }
@@ -1602,7 +1616,7 @@ public final class Main_form extends javax.swing.JFrame {
         return idx;
     }
 
-    public void exit_program() {
+    private void exit_program() {
         result = show_message(message.CONFIRM_EXIT);
         if (result == 0) {
             SauVan.reorder_file_data();
@@ -1611,9 +1625,108 @@ public final class Main_form extends javax.swing.JFrame {
         unlockFile();
     }
 
-    public void show_status(String message, Color color) {
+    private void show_status(String message, Color color) {
         Thong_bao_text.setText(message);
         Thong_bao_text.setForeground(color);
+    }
+
+    private void display_result2infoTable(Vector array_result) {
+        int index_found;
+        Vector update_info_sp = new Vector();
+        search_list.removeAllElements();
+        //clear_table(dm_info_SP);
+        int old_result_count = dm_info_SP.getRowCount();
+
+        for (int i = old_result_count - 1; i >= 0; i--) {
+            if (!(boolean) dm_info_SP.getValueAt(i, 5)) {
+                dm_info_SP.removeRow(i);
+            } else {
+                search_list.add(dm_info_SP.getValueAt(i, 0).toString());
+            }
+        }
+        for (int i = 0; i < array_result.size(); i++) {
+            index_found = Integer.parseInt(array_result.get(i).toString());
+            int new_masp_size = search_list.size();
+            int ibreak = 0;
+            update_info_sp = SauVan.get_sp(index_found);
+            System.out.println("size " + new_masp_size);
+            for (int j = 0; j < new_masp_size; j++) {
+                if (search_list.get(j).equals(update_info_sp.get(0))) {
+                    ibreak = -1;
+                    break;
+                }
+            }
+            if (ibreak != -1) {
+                update_info_sp.add(Boolean.FALSE);
+                dm_info_SP.insertRow(0, update_info_sp);
+            }
+
+        }
+    }
+
+    private int diff_slFormat() {
+        int size = Paid_SoLuongSP.size();
+        double dnum;
+        double dnum1;
+        int return_val = 0;
+        int inum;
+        int diff;
+        for (int i = 0; i < size; i++) {
+            dnum = Paid_SoLuongSP.get(i);
+            inum = Paid_SoLuongSP.get(i).intValue();
+            dnum1 = Double.parseDouble(slFormat1.format(Paid_SoLuongSP.get(i)));
+            if (dnum == inum) {
+                diff = 0;
+            } else if (dnum == dnum1) {
+                diff = 1;
+            } else {
+                diff = 2;
+            }
+            if (diff > return_val) {
+                return_val = diff;
+                if (return_val == 2) {
+                    break;
+                }
+            }
+        }
+        return return_val;
+    }
+
+    private void clear_Updated_list() {
+        New_MaSP.clear();
+    }
+
+    private void clear_hand_list() {
+        hand_offset = 1;
+    }
+
+    private void clear_Paid_list() {
+        Paid_GiaLSP.clear();
+        Paid_GiaSSP.clear();
+        Paid_MaSP.clear();
+        Paid_TenSP.clear();
+        Paid_TongGiaSP.clear();
+        Paid_SoLuongSP.clear();
+    }
+
+    private URL getResource(String myimagejpg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void display_text_paylist() {
+        System.out.println("Size :" + Paid_MaSP.size() + "-"
+                + Paid_TenSP.size() + "-" + Paid_GiaLSP.size() + "-"
+                + Paid_GiaSSP.size() + "-" + Paid_SoLuongSP.size() + "-"
+                + Paid_TongGiaSP.size());
+    }
+
+    private void remove_element_paylist(int i) {
+        Paid_MaSP.removeElementAt(i);
+        Paid_TenSP.removeElementAt(i);
+        Paid_GiaLSP.removeElementAt(i);
+        Paid_GiaSSP.removeElementAt(i);
+        Paid_SoLuongSP.removeElementAt(i);
+        Paid_TongGiaSP.removeElementAt(i);
     }
 
     /**
@@ -2267,84 +2380,7 @@ public final class Main_form extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_formComponentShown
-    public void display_result2infoTable(Vector array_result) {
-        int index_found;
-        Vector update_info_sp = new Vector();
-        search_list.removeAllElements();
-        //clear_table(dm_info_SP);
-        int old_result_count = dm_info_SP.getRowCount();
 
-        for (int i = old_result_count - 1; i >= 0; i--) {
-            if (!(boolean) dm_info_SP.getValueAt(i, 5)) {
-                dm_info_SP.removeRow(i);
-            } else {
-                search_list.add(dm_info_SP.getValueAt(i, 0).toString());
-            }
-        }
-        for (int i = 0; i < array_result.size(); i++) {
-            index_found = Integer.parseInt(array_result.get(i).toString());
-            int new_masp_size = search_list.size();
-            int ibreak = 0;
-            update_info_sp = SauVan.get_sp(index_found);
-            System.out.println("size " + new_masp_size);
-            for (int j = 0; j < new_masp_size; j++) {
-                if (search_list.get(j).equals(update_info_sp.get(0))) {
-                    ibreak = -1;
-                    break;
-                }
-            }
-            if (ibreak != -1) {
-                update_info_sp.add(Boolean.FALSE);
-                dm_info_SP.insertRow(0, update_info_sp);
-            }
-
-        }
-    }
-
-    public int diff_slFormat() {
-        int size = Paid_SoLuongSP.size();
-        double dnum;
-        double dnum1;
-        int return_val = 0;
-        int inum;
-        int diff;
-        for (int i = 0; i < size; i++) {
-            dnum = Paid_SoLuongSP.get(i);
-            inum = Paid_SoLuongSP.get(i).intValue();
-            dnum1 = Double.parseDouble(slFormat1.format(Paid_SoLuongSP.get(i)));
-            if (dnum == inum) {
-                diff = 0;
-            } else if (dnum == dnum1) {
-                diff = 1;
-            } else {
-                diff = 2;
-            }
-            if (diff > return_val) {
-                return_val = diff;
-                if (return_val == 2) {
-                    break;
-                }
-            }
-        }
-        return return_val;
-    }
-
-    public void clear_Updated_list() {
-        New_MaSP.clear();
-    }
-
-    public void clear_hand_list() {
-        hand_offset = 1;
-    }
-
-    public void clear_Paid_list() {
-        Paid_GiaLSP.clear();
-        Paid_GiaSSP.clear();
-        Paid_MaSP.clear();
-        Paid_TenSP.clear();
-        Paid_TongGiaSP.clear();
-        Paid_SoLuongSP.clear();
-    }
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
         // TODO add your handling code here:
         gohome();
@@ -2481,9 +2517,9 @@ public final class Main_form extends javax.swing.JFrame {
     private void textbox_barcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textbox_barcodeActionPerformed
         // TODO add your handling code here:
         int idx;
-        
+
         if (!is_textbox_empty(textbox_barcode)) {
-        //if (!textbox_barcode.getText().isEmpty()) {
+            //if (!textbox_barcode.getText().isEmpty()) {
             curMaSP = textbox_barcode.getText().toUpperCase().trim();
             String[] a = curMaSP.split(" ");
             if (a.length == 2) {
@@ -2689,7 +2725,8 @@ public final class Main_form extends javax.swing.JFrame {
     private void button_save_temp_transactionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button_save_temp_transactionActionPerformed
         // TODO add your handling code here:
         buttonSaveBill();
-        gohome();
+        refresh();
+        //gohome();
     }//GEN-LAST:event_button_save_temp_transactionActionPerformed
 
     private void ComboBox_SaveBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboBox_SaveBillActionPerformed
@@ -2703,7 +2740,7 @@ public final class Main_form extends javax.swing.JFrame {
     private void textbox_loanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textbox_loanActionPerformed
         // TODO add your handling code here:
         get_loan_from_textbox(textbox_loan);
-        add_item_payment_rows();
+        update_payment_rows();
     }//GEN-LAST:event_textbox_loanActionPerformed
 
     private void botton_update_consumerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botton_update_consumerActionPerformed
@@ -2731,21 +2768,6 @@ public final class Main_form extends javax.swing.JFrame {
         // TODO add your handling code here:
         setup_configuration();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
-    public void display_text_paylist() {
-        System.out.println("Size :" + Paid_MaSP.size() + "-"
-                + Paid_TenSP.size() + "-" + Paid_GiaLSP.size() + "-"
-                + Paid_GiaSSP.size() + "-" + Paid_SoLuongSP.size() + "-"
-                + Paid_TongGiaSP.size());
-    }
-
-    public void remove_element_paylist(int i) {
-        Paid_MaSP.removeElementAt(i);
-        Paid_TenSP.removeElementAt(i);
-        Paid_GiaLSP.removeElementAt(i);
-        Paid_GiaSSP.removeElementAt(i);
-        Paid_SoLuongSP.removeElementAt(i);
-        Paid_TongGiaSP.removeElementAt(i);
-    }
 
     /**
      * @param args the command line arguments
@@ -2828,7 +2850,4 @@ public final class Main_form extends javax.swing.JFrame {
     private javax.swing.JTextField textbox_search_name;
     // End of variables declaration//GEN-END:variables
 
-    private URL getResource(String myimagejpg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }
