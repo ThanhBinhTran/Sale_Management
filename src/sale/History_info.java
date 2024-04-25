@@ -75,7 +75,7 @@ public class History_info extends javax.swing.JFrame {
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
         table_hoa_don.getTableHeader().setFont(new Font("Times New Roman", Font.BOLD, 16));
-        TableColumn column = null;
+        TableColumn column;
         column = table_hoa_don.getColumnModel().getColumn(0);
         column.setPreferredWidth(30);
         column.setCellRenderer(rightRenderer);
@@ -116,8 +116,7 @@ public class History_info extends javax.swing.JFrame {
         vTime_name.clear();
         String[] raw_data;
         try {
-            FileInputStream in = new FileInputStream(file_name);
-            try ( BufferedReader bufffile = new BufferedReader(new InputStreamReader(in, "UTF8"))) {
+            try ( FileInputStream in = new FileInputStream(file_name);BufferedReader bufffile = new BufferedReader(new InputStreamReader(in, "UTF8"))) {
                 String strLine;
                 //in.read(strLine);
 
@@ -142,8 +141,7 @@ public class History_info extends javax.swing.JFrame {
                     strLine = bufffile.readLine();
                 }
             }
-            in.close();
-        } catch (Exception e) {//Catch exception if any
+        } catch (IOException e) {//Catch exception if any
             System.err.println("Error: " + e.getMessage());
         }
         notification.setText(file_name);
@@ -562,15 +560,11 @@ public class History_info extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(History_info.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(History_info.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(History_info.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(History_info.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        
         //</editor-fold>
 
         /* Create and display the form */

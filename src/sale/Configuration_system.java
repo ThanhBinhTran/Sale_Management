@@ -87,8 +87,7 @@ public class Configuration_system extends javax.swing.JFrame {
     public boolean LoadConfigureInfo(){
         boolean return_val = true;
         try{
-            FileInputStream in = new FileInputStream(parameter.config_path);
-            try (BufferedReader bufffile = new BufferedReader(new InputStreamReader(in, "UTF8"))) 
+            try (FileInputStream in = new FileInputStream(parameter.config_path);BufferedReader bufffile = new BufferedReader(new InputStreamReader(in, "UTF8"))) 
             {
                 String strLine;
                 strLine = bufffile.readLine();
@@ -108,7 +107,6 @@ public class Configuration_system extends javax.swing.JFrame {
                     strLine = bufffile.readLine();
                 }
             }
-            in.close();
         }catch (IOException e){//Catch exception if any
             return_val = false;
         }

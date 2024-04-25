@@ -312,8 +312,8 @@ public final class Goods_price {
    }
    public int   reorder_file_data()
    {
-       int cur_max_index = 0;
-       double   cur_max_val = 0;
+       int cur_max_index;
+       double   cur_max_val;
        Vector data_row  = new Vector();
        int return_val = 0;
        int data_count  = ma_sp.size();
