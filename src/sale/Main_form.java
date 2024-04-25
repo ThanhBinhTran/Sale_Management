@@ -314,7 +314,7 @@ public final class Main_form extends javax.swing.JFrame {
             temp = table_transaction_items.getValueAt(i, 5);
             Paid_SoLuongSP.set(i, Double.parseDouble(temp.toString()));
 
-            calculate_item_paid_row(i);
+            calculate_item_price_row(i);
             update_item_row(i);
             System.out.println("@@" + Paid_GiaSSP.get(i) + " # " + Paid_GiaLSP.get(i)
                     + " # " + Paid_SoLuongSP.get(i) + "#" + Paid_TongGiaSP.get(i));
@@ -419,7 +419,7 @@ public final class Main_form extends javax.swing.JFrame {
 
             //calculate price for this item then add to Paid_TongGiaSP vector
             index_new_one = Paid_MaSP.size();
-            calculate_item_paid_row(index_new_one - 1);
+            calculate_item_price_row(index_new_one - 1);
 
             //add row into table
             add_item_row();
@@ -431,7 +431,7 @@ public final class Main_form extends javax.swing.JFrame {
             temp_Paid_soluong = Paid_SoLuongSP.get(result) + 1;
             Paid_SoLuongSP.set(result, temp_Paid_soluong);
             display_text_paylist();
-            calculate_item_paid_row(result);
+            calculate_item_price_row(result);
             update_item_row(result);
             update_total_Paid_row();
         }
@@ -450,7 +450,7 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    private void calculate_item_paid_row(int i) {
+    private void calculate_item_price_row(int i) {
         double temp_tong;
         if (i >= 0) {
             giaS_mode = select_price.isSelected();
@@ -549,30 +549,14 @@ public final class Main_form extends javax.swing.JFrame {
     }
 
     private void add_sub_total_row() {
-
-        Vector Paid = new Vector();
-        calculate_total_price();
-        Paid.add(null);
-        Paid.add(null);
-        Paid.add(null);
-        Paid.add(null);
-        Paid.add(null);
-        Paid.add(Money_count_Items);
-        Paid.add(Money_total_bill);
-        dm_hoa_don.addRow(Paid);
+        calculate_sub_total_price();
+        add_vector_row(null, null, null, null, null, Money_count_Items, Money_total_bill, Boolean.FALSE);
     }
 
     private void add_item_total_row() {
-        Vector sVector = new Vector();
-        sVector.add(null);
-        sVector.add(null);
-        sVector.add(null);
-        sVector.add(null);
-        sVector.add(null);
-        sVector.add("Tổng tiền");  //so luong
-        sVector.add(Money_total_bill + loan_amount);  // tien
-        sVector.add(Boolean.FALSE);
-        dm_hoa_don.addRow(sVector);
+        double temp_total = Money_total_bill + loan_amount;
+        add_vector_row(null, null, null, null, null, "Tổng tiền", temp_total, Boolean.FALSE);
+
     }
 
     private void add_total_and_loan_row() {
@@ -602,7 +586,7 @@ public final class Main_form extends javax.swing.JFrame {
         dm_hoa_don.addRow(sVector);
     }
 
-    private void calculate_total_price() {
+    private void calculate_sub_total_price() {
         int sizerow = Paid_MaSP.size();
         Money_count_Items = 0;
         Money_total_bill = 0.0;
@@ -616,7 +600,7 @@ public final class Main_form extends javax.swing.JFrame {
 
     private void update_total_Paid_row() {
         int sizerow = Paid_MaSP.size();
-        calculate_total_price();
+        calculate_sub_total_price();
         table_transaction_items.getModel().setValueAt(Money_count_Items, sizerow, 5);
         table_transaction_items.getModel().setValueAt(Money_total_bill, sizerow, 6);
     }
@@ -918,7 +902,7 @@ public final class Main_form extends javax.swing.JFrame {
     private void normal_mode(Boolean ibool) {
 
         button_pay_print_bill.setVisible(ibool);
-        botton_update_items.setEnabled(!ibool);
+        button_update_items.setEnabled(!ibool);
     }
 
     private int show_message(String imessage) {
@@ -1396,17 +1380,9 @@ public final class Main_form extends javax.swing.JFrame {
                             switch (strLine.substring(0, 3)) {
                                 case "---": {
                                     String sdata[] = strLine.substring(3).split("<>");
-                                    Vector sVector = new Vector();
-                                    sVector.add(count++);
-                                    sVector.add(sdata[0]);  //ma sp
-                                    sVector.add(sdata[1]);  //ten sp
-                                    sVector.add(sdata[4]);  //gia s
-                                    sVector.add(sdata[5]);  //gia l
-                                    sVector.add(sdata[2]);  //so luong
-                                    sVector.add(sdata[3]);  // tien
-                                    sVector.add(Boolean.TRUE);
-                                    dm_hoa_don.addRow(sVector);
+                                    add_vector_row(count++, sdata[0], sdata[1], sdata[4], sdata[5], sdata[2], sdata[3], Boolean.TRUE);
                                     dm_hoa_don.fireTableDataChanged();
+                                    
                                     Paid_MaSP.add(sdata[0]);
                                     Paid_TenSP.add(sdata[1]);
                                     Paid_GiaSSP.add(Double.parseDouble(sdata[4]));
@@ -1416,30 +1392,17 @@ public final class Main_form extends javax.swing.JFrame {
                                     display_text_paylist();
                                     break;
                                 }
-                                case "==>": {
-                                    Vector sVector = new Vector();
-                                    sVector.add(null);
-                                    sVector.add(null);
-                                    sVector.add(null);
-                                    sVector.add(null);
-                                    sVector.add(null);
-                                    sVector.add("1");  //so luong
-                                    sVector.add("1.11");  // tien
-                                    sVector.add(Boolean.FALSE);
-                                    dm_hoa_don.addRow(sVector);
-                                    cal_price_items();
-                                    calculate_total_price();
-                                    break;
-                                }
                                 case parameter.MARKER_LOAN: //no cu
                                 {
                                     String sdata[] = strLine.substring(3).split("<>");
-                                    loan_amount = Double.parseDouble(sdata[0]);
-                                    has_loan = loan_amount > 0;
-                                    textbox_loan.setText(strLine.substring(3));
-                                    add_total_and_loan_row();
+                                    get_loan_from_string(sdata[0]);
+                                    textbox_loan.setText(sdata[0]);
+                                    add_payment_rows();
                                     break OUTER;
                                 }
+                                default:
+                                    
+                                    break;
                             }
                         }
                         strLine = bufffile.readLine();
@@ -1737,14 +1700,14 @@ public final class Main_form extends javax.swing.JFrame {
         ComboBox_SaveBill = new javax.swing.JComboBox();
         jPanel1 = new javax.swing.JPanel();
         button_exit = new javax.swing.JButton();
-        botton_transaction_history = new javax.swing.JButton();
-        botton_update_items = new javax.swing.JButton();
-        botton_pre_transaction = new javax.swing.JButton();
+        button_transaction_history = new javax.swing.JButton();
+        button_update_items = new javax.swing.JButton();
+        button_pre_transaction = new javax.swing.JButton();
         button_pay_print_bill = new javax.swing.JButton();
         combobox_history_transaction = new javax.swing.JComboBox();
         jLabel5 = new javax.swing.JLabel();
-        botton_print_barcode = new javax.swing.JButton();
-        botton_update_consumer = new javax.swing.JButton();
+        button_print_barcode = new javax.swing.JButton();
+        button_update_consumer = new javax.swing.JButton();
         lable_makhachhang = new javax.swing.JLabel();
         textbox_new_consumer_ID = new javax.swing.JTextField();
         button_refreshment = new javax.swing.JButton();
@@ -1752,7 +1715,6 @@ public final class Main_form extends javax.swing.JFrame {
         Menu_tool = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
-        menu_lamtuoi = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Cửa hàng tạp hóa SÁU VÂN");
@@ -2083,32 +2045,32 @@ public final class Main_form extends javax.swing.JFrame {
             }
         });
 
-        botton_transaction_history.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        botton_transaction_history.setForeground(new java.awt.Color(102, 0, 0));
-        botton_transaction_history.setText("Xem lại h.đơn");
-        botton_transaction_history.setToolTipText("xem lại các hóa đơn đã bán, mở file sau đó chọn năm/ chọn tháng/ rồi chọn ngày");
-        botton_transaction_history.addActionListener(new java.awt.event.ActionListener() {
+        button_transaction_history.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        button_transaction_history.setForeground(new java.awt.Color(102, 0, 0));
+        button_transaction_history.setText("Xem lại h.đơn");
+        button_transaction_history.setToolTipText("xem lại các hóa đơn đã bán, mở file sau đó chọn năm/ chọn tháng/ rồi chọn ngày");
+        button_transaction_history.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botton_transaction_historyActionPerformed(evt);
+                button_transaction_historyActionPerformed(evt);
             }
         });
 
-        botton_update_items.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        botton_update_items.setForeground(new java.awt.Color(102, 0, 0));
-        botton_update_items.setText("C.nhập giá,tên");
-        botton_update_items.setToolTipText("Cập nhập giá cả, tên sản phẩm. số lượng hàng nhập ....");
-        botton_update_items.addActionListener(new java.awt.event.ActionListener() {
+        button_update_items.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        button_update_items.setForeground(new java.awt.Color(102, 0, 0));
+        button_update_items.setText("C.nhập giá,tên");
+        button_update_items.setToolTipText("Cập nhập giá cả, tên sản phẩm. số lượng hàng nhập ....");
+        button_update_items.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botton_update_itemsActionPerformed(evt);
+                button_update_itemsActionPerformed(evt);
             }
         });
 
-        botton_pre_transaction.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        botton_pre_transaction.setForeground(new java.awt.Color(102, 0, 0));
-        botton_pre_transaction.setText("Thanh toán");
-        botton_pre_transaction.addActionListener(new java.awt.event.ActionListener() {
+        button_pre_transaction.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        button_pre_transaction.setForeground(new java.awt.Color(102, 0, 0));
+        button_pre_transaction.setText("Thanh toán");
+        button_pre_transaction.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botton_pre_transactionActionPerformed(evt);
+                button_pre_transactionActionPerformed(evt);
             }
         });
 
@@ -2134,22 +2096,22 @@ public final class Main_form extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(0, 0, 153));
         jLabel5.setText("Hóa đơn đã bán:");
 
-        botton_print_barcode.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        botton_print_barcode.setForeground(new java.awt.Color(102, 0, 0));
-        botton_print_barcode.setText("In mã");
-        botton_print_barcode.setToolTipText("In mã vạch");
-        botton_print_barcode.addActionListener(new java.awt.event.ActionListener() {
+        button_print_barcode.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        button_print_barcode.setForeground(new java.awt.Color(102, 0, 0));
+        button_print_barcode.setText("In mã");
+        button_print_barcode.setToolTipText("In mã vạch");
+        button_print_barcode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botton_print_barcodeActionPerformed(evt);
+                button_print_barcodeActionPerformed(evt);
             }
         });
 
-        botton_update_consumer.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        botton_update_consumer.setForeground(new java.awt.Color(102, 0, 0));
-        botton_update_consumer.setText("C.nhập khách");
-        botton_update_consumer.addActionListener(new java.awt.event.ActionListener() {
+        button_update_consumer.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        button_update_consumer.setForeground(new java.awt.Color(102, 0, 0));
+        button_update_consumer.setText("C.nhập khách");
+        button_update_consumer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botton_update_consumerActionPerformed(evt);
+                button_update_consumerActionPerformed(evt);
             }
         });
 
@@ -2179,15 +2141,15 @@ public final class Main_form extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(button_pay_print_bill)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(botton_pre_transaction)
+                .addComponent(button_pre_transaction)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(botton_update_items)
+                .addComponent(button_update_items)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(botton_update_consumer)
+                .addComponent(button_update_consumer)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(botton_transaction_history)
+                .addComponent(button_transaction_history)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(botton_print_barcode)
+                .addComponent(button_print_barcode)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(button_exit)
                 .addContainerGap())
@@ -2199,12 +2161,12 @@ public final class Main_form extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(button_exit, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(botton_transaction_history, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(botton_update_items, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(botton_pre_transaction, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(button_transaction_history, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(button_update_items, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(button_pre_transaction, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(button_pay_print_bill, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(botton_print_barcode, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(botton_update_consumer, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(button_print_barcode, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(button_update_consumer, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 19, Short.MAX_VALUE)
@@ -2218,7 +2180,7 @@ public final class Main_form extends javax.swing.JFrame {
                 .addGap(10, 10, 10))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {botton_pre_transaction, botton_transaction_history, botton_update_items, button_exit, button_pay_print_bill});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {button_exit, button_pay_print_bill, button_pre_transaction, button_transaction_history, button_update_items});
 
         button_refreshment.setFont(new java.awt.Font("Times New Roman", 0, 16)); // NOI18N
         button_refreshment.setForeground(new java.awt.Color(102, 0, 0));
@@ -2304,15 +2266,6 @@ public final class Main_form extends javax.swing.JFrame {
         });
         Menu_tool.add(jMenuItem2);
 
-        menu_lamtuoi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sale/img/menu_refresh.png"))); // NOI18N
-        menu_lamtuoi.setText("Làm tươi hệ thống");
-        menu_lamtuoi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menu_lamtuoiActionPerformed(evt);
-            }
-        });
-        Menu_tool.add(menu_lamtuoi);
-
         jMenuBar1.add(Menu_tool);
 
         setJMenuBar(jMenuBar1);
@@ -2376,14 +2329,13 @@ public final class Main_form extends javax.swing.JFrame {
     private void button_refreshmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button_refreshmentActionPerformed
         // TODO add your handling code here:
         refresh();
-
     }//GEN-LAST:event_button_refreshmentActionPerformed
 
-    private void botton_print_barcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botton_print_barcodeActionPerformed
+    private void button_print_barcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button_print_barcodeActionPerformed
         // TODO add your handling code here:
         in_ma_vach();
 
-    }//GEN-LAST:event_botton_print_barcodeActionPerformed
+    }//GEN-LAST:event_button_print_barcodeActionPerformed
 
     private void combobox_history_transactionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combobox_history_transactionActionPerformed
         // TODO add your handling code here:
@@ -2396,22 +2348,22 @@ public final class Main_form extends javax.swing.JFrame {
         print_receipt(false);   // false = review print
     }//GEN-LAST:event_button_pay_print_billActionPerformed
 
-    private void botton_pre_transactionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botton_pre_transactionActionPerformed
+    private void button_pre_transactionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button_pre_transactionActionPerformed
         // TODO add your handling code here:
         diff_slFormat();
         pre_paid();
 
-    }//GEN-LAST:event_botton_pre_transactionActionPerformed
+    }//GEN-LAST:event_button_pre_transactionActionPerformed
 
-    private void botton_update_itemsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botton_update_itemsActionPerformed
+    private void button_update_itemsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button_update_itemsActionPerformed
         // TODO add your handling code here:
         update_paid_table();
-    }//GEN-LAST:event_botton_update_itemsActionPerformed
+    }//GEN-LAST:event_button_update_itemsActionPerformed
 
-    private void botton_transaction_historyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botton_transaction_historyActionPerformed
+    private void button_transaction_historyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button_transaction_historyActionPerformed
         // TODO add your handling code here:
         history_tracking.setVisible(true);
-    }//GEN-LAST:event_botton_transaction_historyActionPerformed
+    }//GEN-LAST:event_button_transaction_historyActionPerformed
 
     private void button_exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button_exitActionPerformed
         // TODO add your handling code here:
@@ -2510,7 +2462,7 @@ public final class Main_form extends javax.swing.JFrame {
                                 add_items_table(item.ID);
                                 Paid_SoLuongSP.set(count, (double) (item.Quanlity));
 
-                                calculate_item_paid_row(count);
+                                calculate_item_price_row(count);
                                 update_item_row(count);
                                 count++;
                             }
@@ -2584,16 +2536,11 @@ public final class Main_form extends javax.swing.JFrame {
         //consilidated_table();
         int row_Count;
         row_Count = table_database_items.getRowCount();
-        double test_gia;
         int test_soluong;
         Object sample;
         show_status("", Color.BLUE);
         for (int i = 0; i < row_Count; i++) {
             try {
-                sample = table_database_items.getValueAt(i, 2);
-                test_gia = Double.parseDouble(sample.toString());
-                sample = table_database_items.getValueAt(i, 3);
-                test_gia = Double.parseDouble(sample.toString());
                 sample = table_database_items.getValueAt(i, 4);
                 test_soluong = Integer.parseInt(sample.toString());
                 if (test_soluong <= 0) {
@@ -2715,20 +2662,15 @@ public final class Main_form extends javax.swing.JFrame {
         update_payment_rows();
     }//GEN-LAST:event_textbox_loanActionPerformed
 
-    private void botton_update_consumerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botton_update_consumerActionPerformed
+    private void button_update_consumerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button_update_consumerActionPerformed
         // TODO add your handling code here:
         update_customers();
 
-    }//GEN-LAST:event_botton_update_consumerActionPerformed
+    }//GEN-LAST:event_button_update_consumerActionPerformed
 
     private void textbox_new_consumer_IDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textbox_new_consumer_IDActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textbox_new_consumer_IDActionPerformed
-
-    private void menu_lamtuoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_lamtuoiActionPerformed
-        // TODO add your handling code here:
-        refresh();
-    }//GEN-LAST:event_menu_lamtuoiActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
@@ -2780,19 +2722,19 @@ public final class Main_form extends javax.swing.JFrame {
     private javax.swing.JComboBox ComboBox_SaveBill;
     private javax.swing.JMenu Menu_tool;
     private javax.swing.JLabel Thong_bao_text;
-    private javax.swing.JButton botton_pre_transaction;
-    private javax.swing.JButton botton_print_barcode;
-    private javax.swing.JButton botton_transaction_history;
-    private javax.swing.JButton botton_update_consumer;
-    private javax.swing.JButton botton_update_items;
     private javax.swing.JButton button_add_temp_item;
     private javax.swing.JButton button_add_to_cart;
     private javax.swing.JButton button_clear_update_table;
     private javax.swing.JButton button_exit;
     private javax.swing.JButton button_pay_print_bill;
+    private javax.swing.JButton button_pre_transaction;
+    private javax.swing.JButton button_print_barcode;
     private javax.swing.JButton button_refreshment;
     private javax.swing.JButton button_save_temp_transaction;
+    private javax.swing.JButton button_transaction_history;
+    private javax.swing.JButton button_update_consumer;
     private javax.swing.JButton button_update_database_item;
+    private javax.swing.JButton button_update_items;
     private javax.swing.JComboBox combobox_history_transaction;
     private javax.swing.JLabel date_time;
     private javax.swing.JLabel date_time1;
@@ -2810,7 +2752,6 @@ public final class Main_form extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane_banghoadon;
     private javax.swing.JLabel lable_makhachhang;
-    private javax.swing.JMenuItem menu_lamtuoi;
     private javax.swing.JCheckBox select_price;
     private javax.swing.JTable table_database_items;
     private javax.swing.JTable table_transaction_items;

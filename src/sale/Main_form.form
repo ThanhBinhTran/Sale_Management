@@ -31,17 +31,6 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem2ActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="menu_lamtuoi">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/sale/img/menu_refresh.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="L&#xe0;m t&#x1b0;&#x1a1;i h&#x1ec7; th&#x1ed1;ng"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menu_lamtuoiActionPerformed"/>
-              </Events>
-            </MenuItem>
           </SubComponents>
         </Menu>
       </SubComponents>
@@ -592,15 +581,15 @@
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="button_pay_print_bill" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="botton_pre_transaction" min="-2" max="-2" attributes="0"/>
+                      <Component id="button_pre_transaction" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="botton_update_items" min="-2" max="-2" attributes="0"/>
+                      <Component id="button_update_items" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="botton_update_consumer" min="-2" max="-2" attributes="0"/>
+                      <Component id="button_update_consumer" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="botton_transaction_history" min="-2" max="-2" attributes="0"/>
+                      <Component id="button_transaction_history" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="botton_print_barcode" min="-2" max="-2" attributes="0"/>
+                      <Component id="button_print_barcode" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="button_exit" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -614,12 +603,12 @@
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="button_exit" linkSize="1" alignment="3" min="-2" pref="44" max="-2" attributes="0"/>
-                                  <Component id="botton_transaction_history" linkSize="1" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
-                                  <Component id="botton_update_items" linkSize="1" alignment="3" min="-2" pref="44" max="-2" attributes="0"/>
-                                  <Component id="botton_pre_transaction" linkSize="1" alignment="3" min="-2" pref="44" max="-2" attributes="0"/>
+                                  <Component id="button_transaction_history" linkSize="1" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
+                                  <Component id="button_update_items" linkSize="1" alignment="3" min="-2" pref="44" max="-2" attributes="0"/>
+                                  <Component id="button_pre_transaction" linkSize="1" alignment="3" min="-2" pref="44" max="-2" attributes="0"/>
                                   <Component id="button_pay_print_bill" linkSize="1" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
-                                  <Component id="botton_print_barcode" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
-                                  <Component id="botton_update_consumer" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
+                                  <Component id="button_print_barcode" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
+                                  <Component id="button_update_consumer" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
@@ -659,7 +648,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="button_exitActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="botton_transaction_history">
+            <Component class="javax.swing.JButton" name="button_transaction_history">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Times New Roman" size="18" style="1"/>
@@ -671,10 +660,10 @@
                 <Property name="toolTipText" type="java.lang.String" value="xem l&#x1ea1;i c&#xe1;c h&#xf3;a &#x111;&#x1a1;n &#x111;&#xe3; b&#xe1;n, m&#x1edf; file sau &#x111;&#xf3; ch&#x1ecd;n n&#x103;m/ ch&#x1ecd;n th&#xe1;ng/ r&#x1ed3;i ch&#x1ecd;n ng&#xe0;y"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botton_transaction_historyActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="button_transaction_historyActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="botton_update_items">
+            <Component class="javax.swing.JButton" name="button_update_items">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Times New Roman" size="18" style="1"/>
@@ -686,10 +675,10 @@
                 <Property name="toolTipText" type="java.lang.String" value="C&#x1ead;p nh&#x1ead;p gi&#xe1; c&#x1ea3;, t&#xea;n s&#x1ea3;n ph&#x1ea9;m. s&#x1ed1; l&#x1b0;&#x1ee3;ng h&#xe0;ng nh&#x1ead;p ...."/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botton_update_itemsActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="button_update_itemsActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="botton_pre_transaction">
+            <Component class="javax.swing.JButton" name="button_pre_transaction">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Times New Roman" size="18" style="1"/>
@@ -700,7 +689,7 @@
                 <Property name="text" type="java.lang.String" value="Thanh to&#xe1;n"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botton_pre_transactionActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="button_pre_transactionActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="button_pay_print_bill">
@@ -747,7 +736,7 @@
                 <Property name="text" type="java.lang.String" value="H&#xf3;a &#x111;&#x1a1;n &#x111;&#xe3; b&#xe1;n:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="botton_print_barcode">
+            <Component class="javax.swing.JButton" name="button_print_barcode">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Times New Roman" size="18" style="1"/>
@@ -759,10 +748,10 @@
                 <Property name="toolTipText" type="java.lang.String" value="In m&#xe3; v&#x1ea1;ch"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botton_print_barcodeActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="button_print_barcodeActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="botton_update_consumer">
+            <Component class="javax.swing.JButton" name="button_update_consumer">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Times New Roman" size="18" style="1"/>
@@ -773,7 +762,7 @@
                 <Property name="text" type="java.lang.String" value="C.nh&#x1ead;p kh&#xe1;ch"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botton_update_consumerActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="button_update_consumerActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="lable_makhachhang">
