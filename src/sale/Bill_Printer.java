@@ -56,7 +56,6 @@ public final class Bill_Printer implements Printable, ActionListener {
   
   Bill_Printer (){
         UIManager.put("swing.boldMetal", Boolean.FALSE);
-        JFrame f = new JFrame("tap hoa sau van_dich vu in");
         get_bill_configure();
         moneyFormat = new DecimalFormat("#,##0.0");
   }

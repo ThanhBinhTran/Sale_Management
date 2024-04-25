@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -54,27 +55,27 @@ public class Configuration_system extends javax.swing.JFrame {
             if(a || Fdir.isDirectory())
             {
                 FileOutputStream fos = new FileOutputStream(parameter.config_path);
-                Writer out = new OutputStreamWriter(fos, "UTF8");
-                out.write("=00" + bill_name.getText().trim() + "\n");
-                out.write("=01" + bill_phone.getText().trim() + "\n");
-                out.write("=02" + bill_separation1.getText().trim() + "\n");
-                out.write("=03" + bill_numofitems.getText().trim() + "\n");
-                out.write("=04" + bill_subtotal.getText().trim() + "\n");
-                out.write("=05" + bill_remained.getText().trim() + "\n");
-                out.write("=06" + bill_separation2.getText().trim() + "\n");
-                out.write("=07" + bill_total.getText().trim() + "\n");
-                out.write("=08" + align_stt.getText().trim() + "<<>>" +
-                                  align_tsp.getText().trim() + "<<>>" +
-                                  align_sl.getText().trim() +"<<>>" +
-                                  align_tien.getText().trim() +"<<>>" +
-                                  align_money.getText().trim() + "\n");
-                out.write("=09" + bill_maxNameChar.getText().trim() + "\n");
-                out.close();
+                try (Writer out = new OutputStreamWriter(fos, "UTF8")) {
+                    out.write("=00" + bill_name.getText().trim() + "\n");
+                    out.write("=01" + bill_phone.getText().trim() + "\n");
+                    out.write("=02" + bill_separation1.getText().trim() + "\n");
+                    out.write("=03" + bill_numofitems.getText().trim() + "\n");
+                    out.write("=04" + bill_subtotal.getText().trim() + "\n");
+                    out.write("=05" + bill_remained.getText().trim() + "\n");
+                    out.write("=06" + bill_separation2.getText().trim() + "\n");
+                    out.write("=07" + bill_total.getText().trim() + "\n");
+                    out.write("=08" + align_stt.getText().trim() + "<<>>" +
+                            align_tsp.getText().trim() + "<<>>" +
+                            align_sl.getText().trim() +"<<>>" +
+                            align_tien.getText().trim() +"<<>>" +
+                            align_money.getText().trim() + "\n");
+                    out.write("=09" + bill_maxNameChar.getText().trim() + "\n");
+                }
             }
         thongbao.setText("Đã lưa");
         thongbao.setForeground(Color.blue);
         }
-        catch (Exception e){//Catch exception if any
+        catch (IOException e){//Catch exception if any
             thongbao.setText("Lỗi file");
             thongbao.setForeground(Color.red);
         }
@@ -108,7 +109,7 @@ public class Configuration_system extends javax.swing.JFrame {
                 }
             }
             in.close();
-        }catch (Exception e){//Catch exception if any
+        }catch (IOException e){//Catch exception if any
             return_val = false;
         }
 
@@ -563,15 +564,11 @@ public class Configuration_system extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Configuration_system.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Configuration_system.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Configuration_system.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Configuration_system.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        
         //</editor-fold>
 
         /* Create and display the form */

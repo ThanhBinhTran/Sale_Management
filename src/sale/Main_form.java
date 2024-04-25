@@ -48,7 +48,6 @@ import javax.script.ScriptException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
-import org.apache.poi.hslf.model.TextBox;
 //import net.sf.json.JSONSerializer;
 
 /**
@@ -198,7 +197,7 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    private final void my_initialization() {
+    private void my_initialization() {
         button_update_database_item.setEnabled(false);
         dm_hoa_don = (DefaultTableModel) table_transaction_items.getModel();
         dm_info_SP = (DefaultTableModel) table_database_items.getModel();
@@ -219,7 +218,7 @@ public final class Main_form extends javax.swing.JFrame {
 
     /*BINH function*/
     private void gohome() {
-        textbox_barcode.setText("");
+        textbox_clear(textbox_barcode);
         textbox_barcode.grabFocus();
     }
 
@@ -402,8 +401,8 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    private final void addtopay(int idx) {
-        Vector CurSP = new Vector();
+    private void addtopay(int idx) {
+        Vector CurSP;
         CurSP = SauVan.get_sp(idx);
         result = search_onpaylist(CurSP.elementAt(0).toString());
         //not found in buying list
@@ -484,10 +483,7 @@ public final class Main_form extends javax.swing.JFrame {
         table_transaction_items.getModel().setValueAt(Paid_TongGiaSP.get(i), i, 6);
     }
 
-    private void clear_table(DefaultTableModel tableModel) {
-        tableModel.getDataVector().removeAllElements();
-        tableModel.fireTableDataChanged(); // notifies the JTable that the model has changed
-    }
+
 
     private void update_payment_rows() {
         remove_payment_rows();
@@ -544,11 +540,7 @@ public final class Main_form extends javax.swing.JFrame {
         has_loan = loan_amount > 0;
     }
 
-    private void loan_clear() {
-        loan_amount = 0;
-        has_loan = false;
-        loan_already_on_table = false;
-    }
+
 
     private void add_payment_rows() {
 
@@ -622,14 +614,6 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    private void add_table_row(List<Object> items, DefaultTableModel dtm) {
-        Vector sVector = new Vector();
-        for (Object item : items) {
-            sVector.add(item);
-        }
-        dtm.addRow(sVector);
-    }
-
     private void update_total_Paid_row() {
         int sizerow = Paid_MaSP.size();
         calculate_total_price();
@@ -692,19 +676,6 @@ public final class Main_form extends javax.swing.JFrame {
         } else {
             show_status("Đã có trong danh sách: hàng " + i + 1, Color.RED);
         }
-    }
-
-    private void handle_Consumer_name() {
-        if (Consumer_name.equals("")) {
-            Consumer_name = "Ẩn danh";
-        } else if (Consumer_name.substring(0, 3).contains("chi")) {
-            //String replaceFirst = Consumer_name.replaceFirst("chi", chi);
-        } else if (Consumer_name.substring(0, 3).contains("co")) {
-            //Consumer_name.substring(0, 3).replaceFirst("co", co);
-        } else if (Consumer_name.substring(0, 3).contains("chu")) {
-            // Consumer_name.substring(0, 3).replaceFirst("chu", chu);
-        }
-        textbox_consumer_name.setText("");
     }
 
     private void cal_price_items() {
@@ -1231,45 +1202,21 @@ public final class Main_form extends javax.swing.JFrame {
         return return_string;
     }
 
-    private void consilidated_table() {
-        int row_count = table_database_items.getRowCount();
-        Object temp;
-        double temp_result;
-        temp_result = 1.0;
-        for (int i = 0; i < row_count; i++) {
-            for (int j = 2; j < 4; j++) {
-                temp = table_database_items.getValueAt(i, j);
-                //calprice(temp.toString(), result);
-                temp_result = calprice(temp.toString());
-                if (temp_result != -99999.0) {
-                    table_database_items.setValueAt(temp_result, i, j);
-                } else {
-                    table_database_items.setValueAt(temp, i, j);
-                }
-                System.out.println("result: " + temp_result + " temp " + temp.toString() + "row " + i);
-            }
-        }
-    }
-
-    private void xem_lai_hoa_don() {
-        history_tracking.setVisible(true);
-    }
-
     private void refresh() {
+        // clear data 
         clear_Paid_list();
         clear_Updated_list();
         clear_hand_list();
-        clear_table(dm_hoa_don);
-        clear_table(dm_info_SP);
+        clear_loan();
+        
+        // clear GUI
+        clear_GUI_table();
+        clear_GUI_textbox();
         normal_mode(false);
         Updated_mode = false;
-        textbox_search_ID.setText("");
-        textbox_search_name.setText("");
-        textbox_new_consumer_ID.setText("");
-        textbox_consumer_name.setText("");
-        textbox_loan.setText("");
+
         combobox_history_transaction.setEnabled(true);
-        loan_clear();
+        
         gohome();
     }
 
@@ -1632,7 +1579,7 @@ public final class Main_form extends javax.swing.JFrame {
 
     private void display_result2infoTable(Vector array_result) {
         int index_found;
-        Vector update_info_sp = new Vector();
+        Vector update_info_sp;
         search_list.removeAllElements();
         //clear_table(dm_info_SP);
         int old_result_count = dm_info_SP.getRowCount();
@@ -1708,7 +1655,32 @@ public final class Main_form extends javax.swing.JFrame {
         Paid_TongGiaSP.clear();
         Paid_SoLuongSP.clear();
     }
-
+    private void clear_loan()
+    {
+        loan_amount = 0;
+        has_loan = false;
+        loan_already_on_table = false;
+    }
+    
+    private void clear_table(DefaultTableModel tableModel) {
+        tableModel.getDataVector().removeAllElements();
+        tableModel.fireTableDataChanged(); // notifies the JTable that the model has changed
+    }
+    
+    private void clear_GUI_table()
+    {
+        clear_table(dm_hoa_don);
+        clear_table(dm_info_SP);
+    }
+    
+    private void clear_GUI_textbox()
+    {
+        textbox_clear(textbox_search_ID);
+        textbox_clear(textbox_search_name);
+        textbox_clear(textbox_new_consumer_ID);
+        textbox_clear(textbox_consumer_name);
+        textbox_clear(textbox_loan);
+    }
     private URL getResource(String myimagejpg) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -2456,7 +2428,7 @@ public final class Main_form extends javax.swing.JFrame {
 
     private void textbox_loanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textbox_loanMouseClicked
         // TODO add your handling code here:
-        textbox_loan.setText("");
+        textbox_clear(textbox_loan);
     }//GEN-LAST:event_textbox_loanMouseClicked
 
     private void button_add_temp_itemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button_add_temp_itemActionPerformed
@@ -2479,7 +2451,7 @@ public final class Main_form extends javax.swing.JFrame {
 
     private void textbox_consumer_nameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textbox_consumer_nameMouseClicked
         // TODO add your handling code here:
-        textbox_consumer_name.setText("");
+        textbox_clear(textbox_consumer_name);
     }//GEN-LAST:event_textbox_consumer_nameMouseClicked
 
     private void select_priceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_select_priceActionPerformed
@@ -2521,9 +2493,9 @@ public final class Main_form extends javax.swing.JFrame {
         if (!is_textbox_empty(textbox_barcode)) {
             //if (!textbox_barcode.getText().isEmpty()) {
             curMaSP = textbox_barcode.getText().toUpperCase().trim();
-            String[] a = curMaSP.split(" ");
-            if (a.length == 2) {
-                switch (a[0]) {
+            String[] in_barcode = curMaSP.split(" ");
+            if (in_barcode.length == 2) {
+                switch (in_barcode[0]) {
                     case parameter.CUSTOMERS:
                         idx = is_exist_customer(curMaSP);
                         if (idx == -1) {
@@ -2546,7 +2518,7 @@ public final class Main_form extends javax.swing.JFrame {
                         }
                         break;
                     case parameter.COMMAND:
-                        handle_commands(a[1]);
+                        handle_commands(in_barcode[1]);
                         break;
                     default:
                         break;
@@ -2569,7 +2541,7 @@ public final class Main_form extends javax.swing.JFrame {
             //clear table
             display_result2infoTable(array_result);
 
-            if (array_result.size() > 0) {
+            if (!array_result.isEmpty()) {
                 button_add_to_cart.setEnabled(true);
                 button_update_database_item.setEnabled(true);
             } else {
@@ -2629,7 +2601,7 @@ public final class Main_form extends javax.swing.JFrame {
                     row_Count = 0;  // break next loop
                     break;
                 }
-            } //Catch error if input was not a number and repeat while loop.
+            } //Catch error if input was not in_barcode number and repeat while loop.
             catch (NumberFormatException e) {
                 show_status("[lỗi nhập số] Hàng " + (i + 1), Color.RED);
                 row_Count = 0;  // break next loop
