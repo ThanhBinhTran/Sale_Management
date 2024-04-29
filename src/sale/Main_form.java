@@ -85,7 +85,7 @@ public final class Main_form extends javax.swing.JFrame {
     private String Consumer_name;
     private String file_path;
     private DefaultTableModel dm_hoa_don;
-    private boolean hd_inMethodClean = false;
+    //private boolean hd_inMethodClean = false;
     private DefaultTableModel dm_info_SP;
     private DefaultComboBoxModel Cbm_history;
     private Vector curSP;
@@ -300,6 +300,7 @@ public final class Main_form extends javax.swing.JFrame {
     }
 
     private final void update_bang_hoadon() {
+        System.out.println("Calling update_bang_hoadon()");
         int row_count = table_transaction_items.getRowCount();
         Object temp;
         //int i = bang_HoaDon.getSelectedRow();
@@ -319,7 +320,8 @@ public final class Main_form extends javax.swing.JFrame {
             System.out.println("@@" + Paid_GiaSSP.get(i) + " # " + Paid_GiaLSP.get(i)
                     + " # " + Paid_SoLuongSP.get(i) + "#" + Paid_TongGiaSP.get(i));
         }
-        update_total_Paid_row();
+        add_payment_rows();
+        //update_total_Paid_row();
     }
 
     private final void setPayTableColumnSize() {
@@ -402,13 +404,14 @@ public final class Main_form extends javax.swing.JFrame {
     }
 
     private void addtopay(int idx) {
+        System.out.println("BINH_DEBUG@)@$" + idx);
         Vector CurSP;
         CurSP = SauVan.get_sp(idx);
-        result = search_onpaylist(CurSP.elementAt(0).toString());
+        int item_idx = search_onpaylist(CurSP.elementAt(0).toString());
         //not found in buying list
         Double temp_Paid_soluong;
-        int index_new_one;
-        if (result == -1) //add new one into pay list
+        System.out.println("BINH_DEBUG@)@$ item_idx" + item_idx);
+        if (item_idx == -1) //add new one into pay list
         {
             show_status("[Thêm] sản phẩm : " + CurSP.get(1).toString(), Color.BLUE);
             Paid_MaSP.add(CurSP.get(0).toString());
@@ -418,23 +421,23 @@ public final class Main_form extends javax.swing.JFrame {
             Paid_SoLuongSP.add(Double.parseDouble(CurSP.get(4).toString()));
 
             //calculate price for this item then add to Paid_TongGiaSP vector
-            index_new_one = Paid_MaSP.size();
-            calculate_item_price_row(index_new_one - 1);
-
+            item_idx = Paid_MaSP.size()-1;
+            
+            calculate_item_price_row(item_idx);
             //add row into table
             add_item_row();
-            add_payment_rows();
         } else //already in pay list
         {
             show_status("[đã có trong giỏ hàng] sản phẩm : " + CurSP.get(1).toString(), Color.BLUE);
 
-            temp_Paid_soluong = Paid_SoLuongSP.get(result) + 1;
-            Paid_SoLuongSP.set(result, temp_Paid_soluong);
+            temp_Paid_soluong = Paid_SoLuongSP.get(item_idx) + 1;
+            Paid_SoLuongSP.set(item_idx, temp_Paid_soluong);
             display_text_paylist();
-            calculate_item_price_row(result);
-            update_item_row(result);
-            update_total_Paid_row();
+            calculate_item_price_row(item_idx);
+            update_item_row(item_idx);
         }
+        
+        add_payment_rows();
         dm_hoa_don.fireTableDataChanged();
 
     }
@@ -454,21 +457,15 @@ public final class Main_form extends javax.swing.JFrame {
         double temp_tong;
         if (i >= 0) {
             giaS_mode = select_price.isSelected();
+            if (giaS_mode) {
+                temp_tong = Paid_SoLuongSP.get(i) * Paid_GiaSSP.get(i);
+            } else {
+                temp_tong = Paid_SoLuongSP.get(i) * Paid_GiaLSP.get(i);
+            }
             if (i == Paid_TongGiaSP.size()) //add mode
             {
-                if (giaS_mode) {
-                    temp_tong = Paid_SoLuongSP.get(i) * Paid_GiaSSP.get(i);
-                } else {
-                    temp_tong = Paid_SoLuongSP.get(i) * Paid_GiaLSP.get(i);
-                }
                 Paid_TongGiaSP.add(temp_tong);
             } else {
-                if (giaS_mode) {
-                    temp_tong = Paid_SoLuongSP.get(i) * Paid_GiaSSP.get(i);
-                } else {
-                    temp_tong = Paid_SoLuongSP.get(i) * Paid_GiaLSP.get(i);
-
-                }
                 Paid_TongGiaSP.set(i, temp_tong);
             }
         } else {
@@ -491,6 +488,7 @@ public final class Main_form extends javax.swing.JFrame {
     }
 
     private void remove_payment_rows() {
+        
         remove_last_row();
         if (loan_already_on_table) {
             remove_last_row();
@@ -499,13 +497,16 @@ public final class Main_form extends javax.swing.JFrame {
     }
 
     private void remove_last_row() {
+        System.out.println("calling remove last row");
         int rowcount = table_transaction_items.getRowCount();
         if (rowcount != 0) {
+            System.out.println("DO________remove last row");
             dm_hoa_don.removeRow(rowcount - 1);
         }
     }
 
     private void add_item_row() {
+        System.out.println("calling ADD NEW ITEM ROWW Paid_MaSP.size()" + Paid_MaSP.size());
         remove_payment_rows();
 
         int last_row = Paid_MaSP.size() - 1;
@@ -675,15 +676,7 @@ public final class Main_form extends javax.swing.JFrame {
         }
         if (paid_count > 0) {
             for (int i = 0; i < paid_count; i++) {
-                if ((boolean) table_transaction_items.getValueAt(i, 7)) {
-                    if (giaS_mode) //gia sy
-                    {
-                        temp_price = Paid_GiaSSP.get(i) * (Paid_SoLuongSP.get(i));
-                    } else {
-                        temp_price = Paid_GiaLSP.get(i) * (Paid_SoLuongSP.get(i));
-                    }
-                    Paid_TongGiaSP.set(i, temp_price);
-                }
+                calculate_item_price_row(i);
                 table_transaction_items.setValueAt(Paid_TongGiaSP.get(i), i, 6);
             }
             update_payment_rows();
@@ -2415,13 +2408,13 @@ public final class Main_form extends javax.swing.JFrame {
 
     private void table_transaction_itemsKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_table_transaction_itemsKeyTyped
         // TODO add your handling code here:
-        if (hd_inMethodClean) {
-            hd_inMethodClean = false;
-            int Scol = table_transaction_items.getSelectedColumn();
-            int Srow = table_transaction_items.getSelectedRow();
-            if (2 == Scol && Scol <= 5 && (Srow + 1) != table_transaction_items.getRowCount()) {
-            }
-        }
+        //if (hd_inMethodClean) {
+        //    hd_inMethodClean = false;
+            //int Scol = table_transaction_items.getSelectedColumn();
+            //int Srow = table_transaction_items.getSelectedRow();
+            //if (2 == Scol && Scol <= 5 && (Srow + 1) != table_transaction_items.getRowCount()) {
+            //}
+        //}
     }//GEN-LAST:event_table_transaction_itemsKeyTyped
 
     private void table_transaction_itemsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_table_transaction_itemsKeyReleased
@@ -2431,11 +2424,13 @@ public final class Main_form extends javax.swing.JFrame {
 
     private void table_transaction_itemsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_transaction_itemsMouseClicked
         // TODO add your handling code here:
-        if (evt.getClickCount() == 1) //a click
-        {
-            hd_inMethodClean = true;
-        }
-        update_total_Paid_row();
+        //System.out.println("calling : table_transaction_itemsMouseClicked");
+        //if (evt.getClickCount() == 1) //a click
+        //{
+        //    
+        //    hd_inMethodClean = true;
+        //}
+        //update_total_Paid_row();
     }//GEN-LAST:event_table_transaction_itemsMouseClicked
 
     private void textbox_barcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textbox_barcodeActionPerformed
