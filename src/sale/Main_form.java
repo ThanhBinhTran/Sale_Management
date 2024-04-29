@@ -299,13 +299,15 @@ public final class Main_form extends javax.swing.JFrame {
         }
     }
 
-    private final void update_bang_hoadon() {
+    private void update_bang_hoadon() {
         System.out.println("Calling update_bang_hoadon()");
-        int row_count = table_transaction_items.getRowCount();
+        int row_count = Paid_TenSP.size();       
+        //int row_count = table_transaction_items.getRowCount();
+
         Object temp;
         //int i = bang_HoaDon.getSelectedRow();
         //if( 0 <= i && i <= (bang_HoaDon.getRowCount() -2))
-        for (int i = 0; i < row_count - 1; i++) {
+        for (int i = 0; i < row_count; i++) {
             temp = table_transaction_items.getValueAt(i, 2);
             Paid_TenSP.set(i, temp.toString());
             temp = table_transaction_items.getValueAt(i, 3);
@@ -320,7 +322,9 @@ public final class Main_form extends javax.swing.JFrame {
             System.out.println("@@" + Paid_GiaSSP.get(i) + " # " + Paid_GiaLSP.get(i)
                     + " # " + Paid_SoLuongSP.get(i) + "#" + Paid_TongGiaSP.get(i));
         }
-        add_payment_rows();
+        calculate_sub_total_price();
+        update_payment_rows();
+        //add_payment_rows();
         //update_total_Paid_row();
     }
 
@@ -435,6 +439,7 @@ public final class Main_form extends javax.swing.JFrame {
             display_text_paylist();
             calculate_item_price_row(item_idx);
             update_item_row(item_idx);
+            remove_payment_rows();
         }
         
         add_payment_rows();
@@ -483,12 +488,13 @@ public final class Main_form extends javax.swing.JFrame {
 
 
     private void update_payment_rows() {
+        System.out.println("calling update_payment_rows()");
         remove_payment_rows();
         add_payment_rows();
     }
 
     private void remove_payment_rows() {
-        
+        System.out.println("calling remove_payment_rows()");
         remove_last_row();
         if (loan_already_on_table) {
             remove_last_row();
@@ -544,23 +550,26 @@ public final class Main_form extends javax.swing.JFrame {
 
 
     private void add_payment_rows() {
-
+        System.out.println("calling add_payment_rows");
         add_sub_total_row();
         add_total_and_loan_row();
     }
 
     private void add_sub_total_row() {
+        System.out.println("calling add_sub_total_row");
         calculate_sub_total_price();
         add_vector_row(null, null, null, null, null, Money_count_Items, Money_total_bill, Boolean.FALSE);
     }
 
     private void add_item_total_row() {
+        System.out.println("calling add_item_total_row");
         double temp_total = Money_total_bill + loan_amount;
         add_vector_row(null, null, null, null, null, "Tổng tiền", temp_total, Boolean.FALSE);
 
     }
 
     private void add_total_and_loan_row() {
+        System.out.println("calling add_total_and_loan_row");
         if (has_loan) {
             loan_already_on_table = true;
             add_loan_row();
@@ -588,6 +597,7 @@ public final class Main_form extends javax.swing.JFrame {
     }
 
     private void calculate_sub_total_price() {
+        System.out.println("calling calculate_sub_total_price()");
         int sizerow = Paid_MaSP.size();
         Money_count_Items = 0;
         Money_total_bill = 0.0;
@@ -600,10 +610,8 @@ public final class Main_form extends javax.swing.JFrame {
     }
 
     private void update_total_Paid_row() {
-        int sizerow = Paid_MaSP.size();
         calculate_sub_total_price();
-        table_transaction_items.getModel().setValueAt(Money_count_Items, sizerow, 5);
-        table_transaction_items.getModel().setValueAt(Money_total_bill, sizerow, 6);
+        update_payment_rows();
     }
 
     private void add_info_SP2BTK(String iMaSP) {
@@ -810,7 +818,8 @@ public final class Main_form extends javax.swing.JFrame {
                 display_text_paylist();
                 dm_hoa_don.fireTableDataChanged();
             }
-            add_sub_total_row();
+            add_payment_rows();
+            //add_sub_total_row();
         } else {
             show_status(message.BILL_IS_EMPTY, Color.BLUE);
         }
@@ -2424,13 +2433,13 @@ public final class Main_form extends javax.swing.JFrame {
 
     private void table_transaction_itemsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_transaction_itemsMouseClicked
         // TODO add your handling code here:
-        //System.out.println("calling : table_transaction_itemsMouseClicked");
-        //if (evt.getClickCount() == 1) //a click
-        //{
-        //    
+        System.out.println("calling : table_transaction_itemsMouseClicked");
+        if (evt.getClickCount() == 1) //a click
+        {
+            
         //    hd_inMethodClean = true;
-        //}
-        //update_total_Paid_row();
+        }
+        update_total_Paid_row();
     }//GEN-LAST:event_table_transaction_itemsMouseClicked
 
     private void textbox_barcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textbox_barcodeActionPerformed
